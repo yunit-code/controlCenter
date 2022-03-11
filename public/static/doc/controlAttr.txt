@@ -1,0 +1,263 @@
+
+{
+    id:"属性的ID，也用于拼接attrRef字段",
+    attrCname:"属性的标题名称",
+    attrCode:"属性唯一的标识，用于存储对应的数据",
+    useCtrlId:"使用的控件标识，根据这里判断为何种控件",
+
+    attrRef:"ref的ID",
+    isSearching:"是否正在搜索中，用于用户/部门、代码选择控件",
+    dropdownOpen:"下拉框是否打开状态，用于用户/部门、代码选择控件",
+    selectedList:"选择结果",
+    colors:"颜色值",
+    useCtrlAttr:"自带属性字符串转换为JSON对象"
+}
+--以下为useCtrlAttr通用属性
+{
+    desc:"不为空显示备注",
+    rules:[{ required: true, message: '必填项，请输入' }],
+    placeholder:"为空提示，例如：请输入",
+}
+--文本框：input
+{
+    maxLength:9999999999999999999
+    allowClear:true
+}
+--数字框：inputNumber
+{
+    min:-9999999999999
+    max:99999999999999
+}
+
+--滑动输入条：slider
+{
+    min:0
+    max:100,
+    step:1,
+    marks:{ 0: 'A', 20: 'B', 40: 'C', 60: 'D', 80: 'E', 100: 'F' },
+    vertical:false
+}
+--颜色选择器：colorPicker
+{
+    allowClear:true
+}
+
+--开关：switch
+{
+
+}
+
+--多行文本框：textarea
+{
+    allowClear:true,
+    autosize:"自适应内容高度，可设置为 true|false 或对象：{ minRows: 2, maxRows: 6 }	"
+}
+
+--日期：datePicker
+{
+    allowClear:true,
+    mode:"日期面板的状态	time|date|month|year|decade",
+    showTime:"增加时间选择功能	Object|boolean	",
+    format:"YYYY-MM-DD HH:mm:ss"
+}
+
+--时间选择：timePicker
+{
+    allowClear:true,
+    format:"HH:mm:ss"
+}
+
+
+--下拉框：select
+{
+    allowClear:true,
+    mode:"'default' | 'multiple' | 'tags' | 'combobox'",
+    options:[{value,title,key,disabled}],
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a",
+    replaceFields:{title:'title', key:'key', value: 'value', disabled:'disabled' },
+}
+
+--按钮组：radioButton
+{
+    options:[{value,title,key,disabled}],
+    groupName:"",
+    buttonStyle:"RadioButton 的风格样式，目前有描边和填色两种风格outline | solid",
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a",
+    replaceFields:{title:'title', key:'key', value: 'value', disabled:'disabled' },
+}
+
+--单选框：radio
+{
+    options:[{value,title,key,disabled}],
+    groupName:"",
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a",
+    replaceFields:{title:'title', key:'key', value: 'value', disabled:'disabled' },
+}
+
+--复选框：checkbox
+{
+    options:[{value,label,title,key,disabled}],
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a",
+    replaceFields:{title:'title',label:'label', key:'key', value: 'value', disabled:'disabled' },
+}
+
+--树结构下拉框：treeSelect
+{
+    options:[
+        {
+            title: "Node1",
+            value: "0-0",
+            key: "0-0",
+            children: [
+            {
+                title: "Child Node1",
+                value: "0-0-0",
+                key: "0-0-0",
+            },
+            ],
+        },
+        {
+            title: "Node2",
+            value: "0-1",
+            key: "0-1",
+            children: [
+            {
+                title: "Child Node3",
+                value: "0-1-0",
+                key: "0-1-0",
+                disabled: true,
+            },
+            {
+                title: "Child Node4",
+                value: "0-1-1",
+                key: "0-1-1",
+            }
+            ],
+        },
+    ],
+    replaceFields:{children:'children', title:'title', key:'key', value: 'value' },
+    treeDataSimpleMode:"默认为：false，设置使用简单格式的 treeData，具体设置参考可设置的类型 (此时 treeData 应变为这样的数据结构: [{id:1, pId:0, value:'1', label:"test1",...},...], pId 是父节点的 id)"
+    showCheckedStrategy:"默认为：SHOW_CHILD，定义选中项回填的方式。SHOW_ALL: 显示所有选中节点(包括父节点). SHOW_PARENT: 只显示父节点(当父节点下所有子节点都选中时). 默认只显示子节点."
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据，url：接口地址，sql：sql语句方式",
+    interfaceUrl:"接口地址，",
+    metaKey:"sql语句元数据Key,这一块需要使用属性sql语句统一请求",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a"
+}
+
+
+--级联选择：cascader
+{
+    allowClear:true,
+    replaceFields:{children:'children', label:'label', value: 'value' },
+    options:[
+        {
+            value: "zhejiang",
+            label: "Zhejiang",
+            children: [
+            {
+                value: "hangzhou",
+                label: "Hangzhou",
+                children: [
+                {
+                    value: "xihu",
+                    label: "West Lake",
+                },
+                ],
+            },
+            ],
+        },
+        {
+            value: "jiangsu",
+            label: "Jiangsu",
+            children: [
+            {
+                value: "nanjing",
+                label: "Nanjing",
+                children: [
+                {
+                    value: "zhonghuamen",
+                    label: "Zhong Hua Men",
+                },
+                ],
+            },
+            ],
+        },
+    ],
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据，url：接口地址，sql：sql语句方式",
+    interfaceUrl:"接口地址，",
+    metaKey:"sql语句元数据Key,这一块需要使用属性sql语句统一请求",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a"
+}
+
+--面板选择：panelSelect
+{
+    options:[{value,title,key,disabled}],
+    replaceFields:{title:'title', key:'key', value: 'value' },
+}
+
+--用户/部门选择：userSelect
+--代码选择：codeSelect
+{
+    options:[
+        {
+            title: "Node1",
+            value: "0-0",
+            key: "0-0",
+            children: [
+            {
+                title: "Child Node1",
+                value: "0-0-0",
+                key: "0-0-0",
+            },
+            ],
+        },
+        {
+            title: "Node2",
+            value: "0-1",
+            key: "0-1",
+            children: [
+            {
+                title: "Child Node3",
+                value: "0-1-0",
+                key: "0-1-0",
+                disabled: true,
+            },
+            {
+                title: "Child Node4",
+                value: "0-1-1",
+                key: "0-1-1",
+            }
+            ],
+        },
+    ],
+    replaceFields:{children:'children', title:'title', key:'key', value: 'value' },
+    treeDataSimpleMode:"暂不可用,默认为：false，设置使用简单格式的 treeData，具体设置参考可设置的类型 (此时 treeData 应变为这样的数据结构: [{id:1, pId:0, value:'1', label:"test1",...},...], pId 是父节点的 id)"
+    showCheckedStrategy:"默认为：SHOW_ALL，定义选中项回填的方式。SHOW_ALL: 显示所有选中节点(包括父节点). SHOW_PARENT: 只显示父节点(当父节点下所有子节点都选中时). SHOW_CHILD：只显示子节点."
+    dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据，url：接口地址，sql：sql语句方式",
+    interfaceUrl:"接口地址，",
+    interfaceType:"请求类型，get、post",
+    customParam:"自定义POST参数，对象格式：{action: self_org,types: person,privateGroup,orgLV1,rootObject: 2,async: true}",
+    metaKey:"sql语句元数据Key,这一块需要使用属性sql语句统一请求",
+    codeId:"201211162442uPdW6cyjA6waWPRqAJ2,这一块需要使用属性数据代码值接口统一请求",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a"
+}
+--文件上传框：upload
+{
+    buttonName:"点击上传",
+    inputFileName:"file",
+    uploadAction:"/ctrl/idm/api/fileupload",
+    listType:"上传列表的内建样式，支持三种基本样式 text, picture 和 picture-card"
+    multipleMode:"是否多选模式，默认为false，设置为true则多选"
+    uploadSuffix:"接受上传的文件类型，默认为：image/*",
+    showFiledName:"data.codeList，支持a.b.c或a[0].b.c[1].d或[0].a"
+}

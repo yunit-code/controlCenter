@@ -1,0 +1,184 @@
+{
+  "id": "2443260",
+  "name": "protalcore",
+  "font_family": "idmicon",
+  "css_prefix_text": "idm-icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "21396802",
+      "name": "line-layout left（左布局）-02",
+      "font_class": "line-layoutleft",
+      "unicode": "e6ec",
+      "unicode_decimal": 59116
+    },
+    {
+      "icon_id": "15391366",
+      "name": "信号",
+      "font_class": "shoujixinhao",
+      "unicode": "e61f",
+      "unicode_decimal": 58911
+    },
+    {
+      "icon_id": "15557101",
+      "name": "信号",
+      "font_class": "wifixinhao",
+      "unicode": "e696",
+      "unicode_decimal": 59030
+    },
+    {
+      "icon_id": "18170248",
+      "name": "电池电量",
+      "font_class": "electricity-full",
+      "unicode": "e996",
+      "unicode_decimal": 59798
+    },
+    {
+      "icon_id": "399564",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "17957576",
+      "name": "树",
+      "font_class": "shu",
+      "unicode": "e672",
+      "unicode_decimal": 58994
+    },
+    {
+      "icon_id": "5205672",
+      "name": "上",
+      "font_class": "shang",
+      "unicode": "e6eb",
+      "unicode_decimal": 59115
+    },
+    {
+      "icon_id": "11235979",
+      "name": "下",
+      "font_class": "xia",
+      "unicode": "e6ae",
+      "unicode_decimal": 59054
+    },
+    {
+      "icon_id": "18983866",
+      "name": "文本",
+      "font_class": "wenben",
+      "unicode": "e648",
+      "unicode_decimal": 58952
+    },
+    {
+      "icon_id": "440582",
+      "name": "框1",
+      "font_class": "kuang1",
+      "unicode": "e639",
+      "unicode_decimal": 58937
+    },
+    {
+      "icon_id": "10955446",
+      "name": "系统管理",
+      "font_class": "guanliyupeizhi-",
+      "unicode": "e61e",
+      "unicode_decimal": 58910
+    },
+    {
+      "icon_id": "12901461",
+      "name": "列表模式",
+      "font_class": "liebiaomoshi",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    },
+    {
+      "icon_id": "13080051",
+      "name": "分栏",
+      "font_class": "fenlan",
+      "unicode": "e983",
+      "unicode_decimal": 59779
+    },
+    {
+      "icon_id": "13312722",
+      "name": "帮 助",
+      "font_class": "bangzhu",
+      "unicode": "e712",
+      "unicode_decimal": 59154
+    },
+    {
+      "icon_id": "14308019",
+      "name": "选择",
+      "font_class": "menu_connectionnew",
+      "unicode": "e782",
+      "unicode_decimal": 59266
+    },
+    {
+      "icon_id": "14560336",
+      "name": "监控中心",
+      "font_class": "jiankongzhongxin",
+      "unicode": "e64f",
+      "unicode_decimal": 58959
+    },
+    {
+      "icon_id": "16520280",
+      "name": "列表模式",
+      "font_class": "liebiaomoshi1",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "19481047",
+      "name": "组件",
+      "font_class": "zujian1",
+      "unicode": "e67c",
+      "unicode_decimal": 59004
+    },
+    {
+      "icon_id": "4310126",
+      "name": "容器",
+      "font_class": "rongqi",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "6480786",
+      "name": "容器",
+      "font_class": "rongqi1",
+      "unicode": "e65e",
+      "unicode_decimal": 58974
+    },
+    {
+      "icon_id": "10537984",
+      "name": "容器",
+      "font_class": "rongqi2",
+      "unicode": "e9eb",
+      "unicode_decimal": 59883
+    },
+    {
+      "icon_id": "16783379",
+      "name": "容器",
+      "font_class": "rongqi3",
+      "unicode": "e65a",
+      "unicode_decimal": 58970
+    },
+    {
+      "icon_id": "18259023",
+      "name": "容器",
+      "font_class": "rongqi4",
+      "unicode": "e6b1",
+      "unicode_decimal": 59057
+    },
+    {
+      "icon_id": "19717431",
+      "name": "容器",
+      "font_class": "rongqi5",
+      "unicode": "e6a6",
+      "unicode_decimal": 59046
+    },
+    {
+      "icon_id": "20335687",
+      "name": "容器",
+      "font_class": "rongqi6",
+      "unicode": "e647",
+      "unicode_decimal": 58951
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0",
+    "lasttime": "2021年11月25日14:23:12",
+    "author": "申龙",
+    "className": "controlCenter",
+    "module": [
+        {
+            "classId": "idm.componet.controlCenter.icontrolsettingpanel",
+            "comName": "属性面板",
+            "className": "IControlSettingPanel",
+            "comType": "common",
+            "comLangue": "vue"
+        }
+    ]
+}
