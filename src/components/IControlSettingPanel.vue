@@ -53,7 +53,7 @@
               v-decorator="[
                 item.attrCode,
                 {
-                  initialValue: 3,
+                  /*initialValue: 3,*/
                   rules: item.useCtrlAttr.rules || [],
                 },
               ]"
@@ -1845,6 +1845,64 @@ export default {
      */
     async initBaseAttrToModule() {
       await this.initData();
+      this.$nextTick(function(){
+        this.initDefaultDataToForm();
+      })
+    },
+    //加载表单默认值
+    initDefaultDataToForm(){
+      var setParam = {};
+      this.formControlDataList&&this.formControlDataList.forEach(item=>{
+        if(!item.defaultValue){
+          return
+        }
+        switch (item.useCtrlId) {
+          case "panelSelect":
+          case "userSelect":
+          case "codeSelect":
+          case "treeSelect":
+          case "upload":
+          case "select":
+          case "cascader":
+          case "checkbox":
+            try {
+              setParam[item.attrCode] = JSON.parse(item.defaultValue);
+            } catch (error) {
+              
+            }
+            break;
+          case "switch":
+            try {
+              setParam[item.attrCode] = eval(item.defaultValue);
+            } catch (error) {
+              
+            }
+            break;
+          default:
+            setParam[item.attrCode] = item.defaultValue;
+            break;
+        }
+        
+        if(item.useCtrlId=="panelSelect"||item.useCtrlId=="userSelect"||item.useCtrlId=="codeSelect"){
+          const attrData = setParam[item.attrCode];
+          if(typeof attrData === "object"){
+            item.selectedList = attrData;
+          }
+          if(!item.selectedListKey){
+            item.selectedListKey = [];
+          }
+          const keyValueName = item.useCtrlAttr.replaceFields&&item.useCtrlAttr.replaceFields.value?item.useCtrlAttr.replaceFields.value:"value";
+          item.selectedList.forEach(sitem=>{
+            item.selectedListKey.push(sitem[keyValueName]);
+          })
+          if(item.useCtrlId!="panelSelect"){
+            this.changePanelSelectOrder(item);
+          }
+        }else if(item.useCtrlId=="colorPicker"){
+          item.colors = setParam[item.attrCode]||"";
+        }
+      });
+      this.form.setFieldsValue(setParam);
     },
     /**
      * 加载表单数据到页面中
@@ -1888,6 +1946,13 @@ export default {
                 case "checkbox":
                   try {
                     setParam[item.attrCode] = JSON.parse(item.attrData);
+                  } catch (error) {
+                    
+                  }
+                  break;
+                case "switch":
+                  try {
+                    setParam[item.attrCode] = eval(item.attrData);
                   } catch (error) {
                     
                   }

@@ -204,6 +204,14 @@
     options:[{value,title,key,disabled}],
     replaceFields:{title:'title', key:'key', value: 'value' },
 }
+{
+    "desc":"显示备注的",
+    "rules":[{ "required": true, "message": "必填项，请输入" }],
+    "dataType":"code",
+    "codeId":"211119180404fD2g1pqxcFIbG2PMyJo",
+    "showFiledName":"data.codeList[0].children",
+    "replaceFields":{"title":"showName","label":"showName", "key":"id", "value": "id","children":"children"}
+}
 
 --用户/部门选择：userSelect
 --代码选择：codeSelect
