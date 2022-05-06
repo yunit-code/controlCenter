@@ -2330,7 +2330,8 @@ export default {
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before",
           ".ant-radio-inner::after",
           ".ant-checkbox-checked .ant-checkbox-inner",
-          ".ant-spin-dot-item"
+          ".ant-spin-dot-item",
+          ".ant-btn-primary"
         ]
         var allBgClass=[];
         bgListClass.forEach(iclass=>{
@@ -2364,7 +2365,9 @@ export default {
         );
         //背景副色汇总
         var bgListClass_minorColor=[
-          ".ant-slider:hover .ant-slider-track "
+          ".ant-slider:hover .ant-slider-track ",
+          ".ant-btn-primary:focus",
+          ".ant-btn-primary:hover"
         ]
         var allBgClass_minorColor=[];
         bgListClass_minorColor.forEach(iclass=>{
@@ -2478,7 +2481,8 @@ export default {
           ".control-center-panel-select-popover .control-center-panel-select-add",
           ".control-center-panel-select-group .control-center-panel-select-add",
           ".ant-btn:hover",
-          ".ant-btn:focus"
+          ".ant-btn:focus",
+          ".ant-btn-primary"
         ]
         var allBdClass=[];
         bdListClass.forEach(iclass=>{
@@ -2519,7 +2523,9 @@ export default {
         );
         //边框副色汇总
         var bdListClass_minorColor=[
-          ".ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open)"
+          ".ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open)",
+          ".ant-btn-primary:focus",
+          ".ant-btn-primary:hover"
         ]
         var allBdClass_minorColor=[];
         bdListClass_minorColor.forEach(iclass=>{

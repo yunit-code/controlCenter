@@ -751,6 +751,7 @@
                     "bindKey": "boxShadow",
                     "desc":"用于设置一般的阴影样式",
                     "default":"0 0 3px rgba(24, 144, 255, 0.2)",
+                    "display":"@[key]",
                     "placeholder":"例如：0 0 3px rgba(24, 144, 255, 0.2)"
                 },{
                     "type": "input",
@@ -758,6 +759,7 @@
                     "text": "较大阴影",
                     "bindKey": "boxShadow1",
                     "desc":"用于设置较大的阴影样式",
+                    "display":"@[key]",
                     "default":"0 0 5px rgba(24, 144, 255, 0.2)",
                     "placeholder":"例如：0 0 5px rgba(24, 144, 255, 0.2)"
                 }
