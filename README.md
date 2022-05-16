@@ -1,4 +1,4 @@
-# layout
+# controlCenter
 
 ## Project setup
 ```
