@@ -85,6 +85,9 @@ export {
 export {
     default as CheckCircleFill
 } from '@ant-design/icons/lib/fill/CheckCircleFill';
+export {
+    default as LoadingOutline
+} from '@ant-design/icons/lib/outline/LoadingOutline';
 /**
  * ======================拖拽设计器中必须的图标，如果删除可能会造成引用了以上图标将会不显示 end===================================
  */
@@ -98,9 +101,6 @@ export {
 export {
     default as UploadOutline
 } from '@ant-design/icons/lib/outline/UploadOutline';
-export {
-    default as LoadingOutline
-} from '@ant-design/icons/lib/outline/LoadingOutline';
 export {
     default as PaperClipOutline
 } from '@ant-design/icons/lib/outline/PaperClipOutline';
