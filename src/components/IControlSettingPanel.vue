@@ -2957,6 +2957,8 @@ export default {
   .control-center-panel-select-footer {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    min-width: 330px;
     .control-center-panel-select-desc {
       font-size: 12px;
       color: #999;
