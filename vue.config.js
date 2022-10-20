@@ -49,6 +49,13 @@ const externals = {
 module.exports = {
     publicPath:"./",
     assetsDir:assetsDir,
+    transpileDependencies: [
+      /[/\\]node_modules[/\\](.+?)?vue-color(.*)/,
+      /[/\\]node_modules[/\\](.+?)?vuedraggable(.*)/,
+      /[/\\]node_modules[/\\](.+?)?sockjs-client(.*)/,
+      /[/\\]node_modules[/\\](.+?)?ant-design_colors(.*)[/\\]colors/,
+      /[/\\]node_modules[/\\](.+?)?moment(.*)[/\\]moment/,
+    ],
     pages:{
       index: {
         // page 的入口
