@@ -297,16 +297,18 @@
                 :dropdownClassName="moduleObject.id"
               />
               <draggable
+                tag="ul" 
                 class="control-center-panel-select-group"
-                tag="ul"
+                chosen-class="control-center-panel-select-ghost"
+                force-fallback="true" 
+                animation="300" 
                 v-model="item.selectedList"
-                v-bind="dragOptions"
+                group="description" 
                 @start="panelSelectDrag = true"
                 @end="
                   panelSelectDrag = false;
                   changePanelSelectOrder(item);
-                "
-              >
+                ">
                 <transition-group
                   type="transition"
                   :name="!panelSelectDrag ? 'flip-list' : null"
@@ -444,16 +446,18 @@
                   <div>
                     <div class="right-selected-box">
                       <draggable
+                        tag="ul" 
                         class="control-center-userdept-select-group"
-                        tag="ul"
+                        chosen-class="control-center-panel-select-ghost"
+                        force-fallback="true" 
+                        animation="300" 
                         v-model="item.selectedList"
-                        v-bind="dragOptionsUser"
+                        group="userdeptgroup" 
                         @start="userDeptSelectDrag = true"
                         @end="
                           userDeptSelectDrag = false;
                           changePanelSelectOrder(item);
-                        "
-                      >
+                        ">
                         <transition-group
                           type="transition"
                           :name="!userDeptSelectDrag ? 'flip-list' : null"

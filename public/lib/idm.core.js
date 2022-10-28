@@ -96,18 +96,35 @@
             /**
              * 把object样式转换为style标签样式并添加到head的标签中
              */
-            setStyleToPageHead:function(id,object){
-              var style = "";
-              for (const key in object) {
-                if (Object.hasOwnProperty.call(object, key)) {
-                  const element = object[key];
-                  style+=`${key}:${element};`
+            setStyleToPageHead:function(selector,object){
+                const oldStyleElement = this.findStyleElement(selector)
+                let newStyleStr = "";
+                for (const key in object) {
+                  if (Object.hasOwnProperty.call(object, key)) {
+                    const element = object[key];
+                    newStyleStr+=`${key}:${element};`
+                  }
                 }
-              }
-              var ele=document.createElement("style");
-              ele.setAttribute("from",id);
-              ele.innerHTML=`${id.indexOf(".")==0?"":"#"}${id}{${style}}`;
-              document.getElementsByTagName('head')[0].appendChild(ele)
+                newStyleStr = `${selector.indexOf(".")==0?"":"#"}${selector}{${newStyleStr}}`;
+                if(oldStyleElement){
+                  if(oldStyleElement.innerHTML !== newStyleStr){
+                      oldStyleElement.innerHTML = newStyleStr
+                  }
+                  return
+                }
+                const newStyleElement=document.createElement("style");
+                newStyleElement.setAttribute("from",selector);
+                newStyleElement.innerHTML=newStyleStr
+                document.getElementsByTagName('head')[0].appendChild(newStyleElement)
+            },
+            /**
+             * 根据from找style元素
+             */
+            findStyleElement(selector) {
+                const styles = document.getElementsByTagName('style')
+                const styleElement = Array.prototype.find.call(styles, el => el.getAttribute("from") === selector)
+                if(styleElement) return styleElement
+                return false
             },
             /**
              * 获取浏览器可视区域宽高方法
@@ -331,6 +348,88 @@
                     if (~index) return IMD().util.array.removeAt(target, index);
                     return false;
                 }
+            },
+            dateFormat:function (timestamp, formats) {
+                // formats格式包括
+                // 1. Y-m-d
+                // 2. Y-m-d H:i:s
+                // 3. Y年m月d日
+                // 4. Y年m月d日 H时i分
+                formats = formats || 'Y-m-d';
+            
+                var zero = function (value) {
+                    if (value < 10) {
+                        return '0' + value;
+                    }
+                    return value;
+                };
+            
+                var myDate = timestamp? new Date(timestamp): new Date();
+            
+                var year = myDate.getFullYear();
+                var month = zero(myDate.getMonth() + 1);
+                var day = zero(myDate.getDate());
+            
+                var hour = zero(myDate.getHours());
+                var minite = zero(myDate.getMinutes());
+                var second = zero(myDate.getSeconds());
+            
+                return formats.replace(/Y|m|d|H|i|s/ig, function (matches) {
+                    return ({
+                        Y: year,
+                        m: month,
+                        d: day,
+                        H: hour,
+                        i: minite,
+                        s: second
+                    })[matches];
+                });
+            },
+            /**
+             * 获取cookie
+             * @param {*} t 
+             * @returns 
+             */
+            getCookie:function(t){
+                for(var i=document.cookie.split("; "),e=0;e<i.length;e++){
+                    var s=i[e].split("=");
+                    if(t==s[0])
+                    return s[1]
+                }
+                return null
+            },
+            /**
+             * hex8转换为rgba的字符串格式
+             * @returns 
+             */
+            hex8ToRgbaString:function(hex){
+                if (hex.length < 9 || hex[0] != '#') return hex
+                let r = parseInt(hex.slice(1, 3), 16)
+                let g = parseInt(hex.slice(3, 5), 16)
+                let b = parseInt(hex.slice(5, 7), 16)
+                let a = parseInt(hex.slice(7, 9), 16)/255
+                let res = 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')'
+                return res
+            },
+            /**
+             * hex8转换为rgba对象格式
+             * {
+                "r": 218,
+                "g": 12,
+                "b": 12,
+                "a": 1
+            }
+             * @returns 
+             */
+            hex8ToRgbaObject:function(hex){
+                if (hex.length < 9 || hex[0] != '#') return hex
+                let r = parseInt(hex.slice(1, 3), 16)
+                let g = parseInt(hex.slice(3, 5), 16)
+                let b = parseInt(hex.slice(5, 7), 16)
+                let a = parseInt(hex.slice(7, 9), 16)/255
+                return {
+                    r,g,b,a
+                }
             }
         }
         /**
@@ -354,6 +453,7 @@
                 let isHtmlDir = false;
                 let isAssetsDir = false;
                 let isModuleDir = false;
+                const base64Reg = RegExp(/^data:(image|audio)\/.*;base64,/)
                 if (url.startsWiths("~")) {
                     isHtmlDir = true;
                     url = url.substr(1);
@@ -363,6 +463,10 @@
                 } else if (url.startsWiths("@")) {
                     isModuleDir = true;
                     url = url.substr(1);
+                } else if (base64Reg.test(url)) {
+                    return url
+                } else if (url.startsWiths(rootPath || IDM.setting.webRoot.default)){
+                    return url
                 }
                 if (url.startsWiths("/")) {
                     url = url.substr(1);
@@ -579,6 +683,120 @@
             }
         }
         /**
+         * 设置样式方法
+         */
+        const style = {
+            /**
+             * 设置border对象属性
+             * @param {*} styleObject
+             * @param {*} element
+             * @param {*} isImportant
+             */
+            setBorderStyle(styleObject, element, isImportant = false) {
+                const importantStr = isImportant ? ' !important' : ''
+                if (element.border.top.width > 0) {
+                    styleObject['border-top-width'] = element.border.top.width + element.border.top.widthUnit + importantStr
+                    styleObject['border-top-style'] = element.border.top.style + importantStr
+                    if (element.border.top.colors.hex8) {
+                        styleObject['border-top-color'] = IDM.hex8ToRgbaString(element.border.top.colors.hex8) + importantStr
+                    }
+                }
+                if (element.border.right.width > 0) {
+                    styleObject['border-right-width'] = element.border.right.width + element.border.right.widthUnit + importantStr
+                    styleObject['border-right-style'] = element.border.right.style + importantStr
+                    if (element.border.right.colors.hex8) {
+                        styleObject['border-right-color'] = IDM.hex8ToRgbaString(element.border.right.colors.hex8) + importantStr
+                    }
+                }
+                if (element.border.bottom.width > 0) {
+                    styleObject['border-bottom-width'] = element.border.bottom.width + element.border.bottom.widthUnit + importantStr
+                    styleObject['border-bottom-style'] = element.border.bottom.style + importantStr
+                    if (element.border.bottom.colors.hex8) {
+                        styleObject['border-bottom-color'] = IDM.hex8ToRgbaString(element.border.bottom.colors.hex8) + importantStr
+                    }
+                }
+                if (element.border.left.width > 0) {
+                    styleObject['border-left-width'] = element.border.left.width + element.border.left.widthUnit + importantStr
+                    styleObject['border-left-style'] = element.border.left.style + importantStr
+                    if (element.border.left.colors.hex8) {
+                        styleObject['border-left-color'] = IDM.hex8ToRgbaString(element.border.left.colors.hex8) + importantStr
+                    }
+                }
+            
+                styleObject['border-top-left-radius'] = element.radius.leftTop.radius + element.radius.leftTop.radiusUnit + importantStr
+                styleObject['border-top-right-radius'] = element.radius.rightTop.radius + element.radius.rightTop.radiusUnit + importantStr
+                styleObject['border-bottom-left-radius'] = element.radius.leftBottom.radius + element.radius.leftBottom.radiusUnit + importantStr
+                styleObject['border-bottom-right-radius'] =
+                    element.radius.rightBottom.radius + element.radius.rightBottom.radiusUnit + importantStr
+            },
+            /**
+             * 设置box对象属性
+             * @param {*} styleObject
+             * @param {*} element
+             * @param {*} isImportant
+             */
+            setBoxStyle(styleObject, element, isImportant = false) {
+                const importantStr = isImportant ? ' !important' : ''
+                if (element.marginTopVal) {
+                    styleObject['margin-top'] = element.marginTopVal + importantStr
+                }
+                if (element.marginRightVal) {
+                    styleObject['margin-right'] = element.marginRightVal + importantStr
+                }
+                if (element.marginBottomVal) {
+                    styleObject['margin-bottom'] = element.marginBottomVal + importantStr
+                }
+                if (element.marginLeftVal) {
+                    styleObject['margin-left'] = element.marginLeftVal + importantStr
+                }
+                if (element.paddingTopVal) {
+                    styleObject['padding-top'] = element.paddingTopVal + importantStr
+                }
+                if (element.paddingRightVal) {
+                    styleObject['padding-right'] = element.paddingRightVal + importantStr
+                }
+                if (element.paddingBottomVal) {
+                    styleObject['padding-bottom'] = element.paddingBottomVal + importantStr
+                }
+                if (element.paddingLeftVal) {
+                    styleObject['padding-left'] = element.paddingLeftVal + importantStr
+                }
+            },
+            /**
+             * 设置font对象属性
+             * @param {*} styleObject
+             * @param {*} element
+             * @param {*} isImportant
+             */
+            setFontStyle(styleObject, element, isImportant = false) {
+                const importantStr = isImportant ? ' !important' : ''
+                styleObject['font-family'] = element.fontFamily + importantStr
+                if (element.fontColors && element.fontColors.hex8) {
+                    styleObject['color'] = IDM.hex8ToRgbaString(element.fontColors.hex8) + importantStr
+                }
+                styleObject['font-weight'] = element.fontWeight && element.fontWeight.split(' ')[0] + importantStr
+                styleObject['font-style'] = element.fontStyle + importantStr
+                styleObject['font-size'] = element.fontSize + element.fontSizeUnit + importantStr
+                styleObject['line-height'] =
+                    element.fontLineHeight + (element.fontLineHeightUnit == '-' ? '' : element.fontLineHeightUnit) + importantStr
+                styleObject['text-align'] = element.fontTextAlign + importantStr
+                styleObject['text-decoration'] = element.fontDecoration + importantStr
+                styleObject['letter-spacing'] = element.fontLetterSpacing + element.fontLetterSpacingUnit + importantStr
+            },
+            
+            /**
+             * 批量生成css类名
+             * @param {前缀选择器} selectorPrefix
+             * @param {子级选择器} subSelectorArray
+             * @returns css 选择器字符串
+             */
+             generateClassName(selectorPrefix, subSelectorArray) {
+                const selectorStr = subSelectorArray.map(el => selectorPrefix + el).join(',')
+                if(selectorStr.startsWith('#')) return selectorStr.substr(1)
+                return selectorStr
+            },
+        }
+        /**
          * 获取数据http
          */
         var http={
@@ -594,7 +812,7 @@
                     "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
                     Code: "idm"
                 },
-                withCredentials: true
+                withCredentials: false
             });
         
             const DEFAULT_ERROR = "网络存在异常";
@@ -1255,7 +1473,8 @@
             app,
             theme,
             watermark,
-            validate
+            validate,
+            style
         }
     }
     /**
@@ -3643,6 +3862,7 @@
         theme:idmFun().theme,
         watermark:idmFun().watermark,
         validate:idmFun().validate,
+        style: idmFun().style,
         message:idmMessage(),
         express,
         layer
