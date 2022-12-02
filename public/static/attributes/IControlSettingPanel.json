@@ -107,7 +107,7 @@
                 {
                     "type": "textarea",
                     "layoutType": "block",
-                    "text": "sql执行接口地址",
+                    "text": "文件上传接口地址",
                     "bindKey": "fileUploadDataIntelface",
                     "default": "/ctrl/idm/api/fileupload"
                 },
