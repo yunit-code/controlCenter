@@ -1141,7 +1141,7 @@ export default {
         // url: IDM.url.getWebPath(resultData.filePath),
       };
       item.selectedList.push(newObject);
-      let customParam = {};
+      let customParam = {...IDM.setting.webRoot};
       if (item.useCtrlAttr.customParam) {
         customParam = item.useCtrlAttr.customParam;
       }
