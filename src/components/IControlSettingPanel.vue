@@ -1148,7 +1148,7 @@ export default {
       IDM.http
         .upload(action, file.file, customParam)
         .then((res) => {
-          const showFiledName = item.useCtrlAttr.showFiledName || "data";
+          const showFiledName = item.useCtrlAttr.showFiledName;
           let resultData = res.data.data;
           try {
             resultData = this.replaceExpData(
@@ -1861,7 +1861,7 @@ export default {
             break;
         }
         if (resultOptions) {
-          const showFiledName = itemObject.useCtrlAttr.showFiledName || "data";
+          const showFiledName = itemObject.useCtrlAttr.showFiledName;
           let optionList = [];
           try {
             optionList = this.replaceExpData(
@@ -1948,6 +1948,9 @@ export default {
      * 替换表达式的数据
      */
     replaceExpData(filedExpression, dataName, resultData) {
+      if(!filedExpression){
+        return resultData;
+      }
       //给defaultValue设置dataFiled的值
       var filedExp = filedExpression;
       filedExp = dataName + (filedExp.startsWiths("[") ? "" : ".") + filedExp;
