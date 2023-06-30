@@ -33,20 +33,14 @@
           >
             <span slot="label">
               {{ item.attrCname }}
-              <a-tooltip
-                v-if="item.useCtrlAttr.desc"
-                :title="item.useCtrlAttr.desc"
-              >
+              <a-tooltip v-if="item.useCtrlAttr.desc" :title="item.useCtrlAttr.desc">
                 <a-icon type="question-circle-o" />
               </a-tooltip>
             </span>
             <!--文本框：input-->
             <a-input
               v-if="item.useCtrlId == 'input'"
-              v-decorator="[
-                item.attrCode,
-                { rules: item.useCtrlAttr.rules || [] },
-              ]"
+              v-decorator="[item.attrCode, { rules: item.useCtrlAttr.rules || [] }]"
               :placeholder="item.useCtrlAttr.placeholder"
               :maxLength="item.useCtrlAttr.maxLength || 9999999999999999999"
               :allowClear="item.useCtrlAttr.allowClear === false ? false : true"
@@ -121,9 +115,7 @@
                 ]"
                 :placeholder="item.useCtrlAttr.placeholder"
                 @change="colorInputChange($event, item)"
-                :allowClear="
-                  item.useCtrlAttr.allowClear === false ? false : true
-                "
+                :allowClear="item.useCtrlAttr.allowClear === false ? false : true"
               >
                 <div
                   class="idm_control_center_colorpicker_icon"
@@ -288,27 +280,25 @@
             <div v-else-if="item.useCtrlId == 'panelSelect'">
               <a-select
                 v-show="false"
-                v-decorator="[
-                  item.attrCode,
-                  { rules: item.useCtrlAttr.rules || [] },
-                ]"
+                v-decorator="[item.attrCode, { rules: item.useCtrlAttr.rules || [] }]"
                 labelInValue
                 mode="multiple"
                 :dropdownClassName="moduleObject.id"
               />
               <draggable
-                tag="ul" 
+                tag="ul"
                 class="control-center-panel-select-group"
                 chosen-class="control-center-panel-select-ghost"
-                force-fallback="true" 
-                animation="300" 
+                force-fallback="true"
+                animation="300"
                 v-model="item.selectedList"
-                group="description" 
+                group="description"
                 @start="panelSelectDrag = true"
                 @end="
                   panelSelectDrag = false;
                   changePanelSelectOrder(item);
-                ">
+                "
+              >
                 <transition-group
                   type="transition"
                   :name="!panelSelectDrag ? 'flip-list' : null"
@@ -330,7 +320,9 @@
                   <a-popover
                     v-model="item.visible"
                     placement="bottomLeft"
-                    :overlayClassName="'control-center-panel-select-popover '+moduleObject.id"
+                    :overlayClassName="
+                      'control-center-panel-select-popover ' + moduleObject.id
+                    "
                     trigger="click"
                   >
                     <div slot="content">
@@ -340,8 +332,7 @@
                         :key="element.value"
                         @click="panelSelectCheck(item, element, 'mb')"
                         :class="{
-                          'select-active':
-                            getPanelSelectCheck(item, element) > -1,
+                          'select-active': getPanelSelectCheck(item, element) > -1,
                         }"
                       >
                         <a-icon
@@ -356,8 +347,7 @@
                             href="javascript:;"
                             v-if="
                               item.useCtrlAttr.options &&
-                              item.selectedList.length !=
-                                item.useCtrlAttr.options.length
+                              item.selectedList.length != item.useCtrlAttr.options.length
                             "
                             @click="panelSelectCheck(item, null, 'all')"
                             >全选</a
@@ -374,9 +364,7 @@
                         </div>
                       </div>
                     </div>
-                    <a-button
-                      icon="plus"
-                      class="control-center-panel-select-add"
+                    <a-button icon="plus" class="control-center-panel-select-add"
                       >选择
                     </a-button>
                   </a-popover>
@@ -403,9 +391,7 @@
               @select="dropDownSelect($event, item)"
               @focus="openDropDownBox(item)"
               @blur="item.isSearching = false"
-              v-else-if="
-                item.useCtrlId == 'userSelect' || item.useCtrlId == 'codeSelect'
-              "
+              v-else-if="item.useCtrlId == 'userSelect' || item.useCtrlId == 'codeSelect'"
               v-decorator="[
                 item.attrCode,
                 {
@@ -415,11 +401,7 @@
             >
               <div slot="dropdownRender" slot-scope="menu">
                 <v-nodes :vnodes="menu" v-if="item.isSearching" />
-                <div
-                  :ref="item.attrRef"
-                  class="control-setting-userselect-panel"
-                  v-else
-                >
+                <div :ref="item.attrRef" class="control-setting-userselect-panel" v-else>
                   <div>
                     <a-tree
                       checkable
@@ -436,28 +418,26 @@
                       :selectedKeys="item.selectedListKey"
                       :tree-data="item.useCtrlAttr.options || []"
                       @select="onUserDeptSelect($event)"
-                      @check="
-                        (checkedKeys, e) =>
-                          onUserDeptCheck(checkedKeys, e, item)
-                      "
+                      @check="(checkedKeys, e) => onUserDeptCheck(checkedKeys, e, item)"
                     >
                     </a-tree>
                   </div>
                   <div>
                     <div class="right-selected-box">
                       <draggable
-                        tag="ul" 
+                        tag="ul"
                         class="control-center-userdept-select-group"
                         chosen-class="control-center-panel-select-ghost"
-                        force-fallback="true" 
-                        animation="300" 
+                        force-fallback="true"
+                        animation="300"
                         v-model="item.selectedList"
-                        group="userdeptgroup" 
+                        group="userdeptgroup"
                         @start="userDeptSelectDrag = true"
                         @end="
                           userDeptSelectDrag = false;
                           changePanelSelectOrder(item);
-                        ">
+                        "
+                      >
                         <transition-group
                           type="transition"
                           :name="!userDeptSelectDrag ? 'flip-list' : null"
@@ -501,8 +481,7 @@
                     <span class="footer-check-number">
                       <span>已选 {{ item.selectedList.length }} 项</span>
                       <div>
-                        <a href="javascript:;" @click="clearUserDeptCheck(item)"
-                          >清空</a
+                        <a href="javascript:;" @click="clearUserDeptCheck(item)">清空</a
                         >&nbsp;&nbsp;
                         <a
                           href="javascript:;"
@@ -522,8 +501,7 @@
                 :key="ssindex"
                 :value="
                   sitem[
-                    item.useCtrlAttr.replaceFields &&
-                    item.useCtrlAttr.replaceFields.value
+                    item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
                       ? item.useCtrlAttr.replaceFields.value
                       : 'value'
                   ]
@@ -531,8 +509,7 @@
               >
                 {{
                   sitem[
-                    item.useCtrlAttr.replaceFields &&
-                    item.useCtrlAttr.replaceFields.title
+                    item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.title
                       ? item.useCtrlAttr.replaceFields.title
                       : "title"
                   ]
@@ -580,10 +557,7 @@
             v-if="propData.ctrlButtonPosition == 'formlast'"
             :wrapper-col="buttonItemLayout.wrapperCol"
           >
-            <div
-              class="cc-btn-box-common"
-              :class="'cc-btn-' + propData.ctrlButtonAlign"
-            >
+            <div class="cc-btn-box-common" :class="'cc-btn-' + propData.ctrlButtonAlign">
               <template v-for="(bitem, bindex) in propData.buttonList">
                 <a-button
                   v-if="bitem.buttonName"
@@ -671,8 +645,8 @@ export default {
             minorColor1: {
               hex8: "#91d5ff",
             },
-            boxShadow:"0 0 3px rgba(24, 144, 255, 0.2)",
-            boxShadow1:"0 0 0 5px rgba(24, 144, 255, 0.2)"
+            boxShadow: "0 0 3px rgba(24, 144, 255, 0.2)",
+            boxShadow1: "0 0 0 5px rgba(24, 144, 255, 0.2)",
           },
           {
             key: "red",
@@ -685,8 +659,8 @@ export default {
             minorColor1: {
               hex8: "#ffaeae",
             },
-            boxShadow:"0 0 3px rgba(255,24,24, 0.2)",
-            boxShadow1:"0 0 0 5px rgba(255,24,24, 0.2)"
+            boxShadow: "0 0 3px rgba(255,24,24, 0.2)",
+            boxShadow1: "0 0 0 5px rgba(255,24,24, 0.2)",
           },
         ],
       },
@@ -1067,8 +1041,7 @@ export default {
               headers: that.propData.resetContentType
                 ? {
                     "Content-Type":
-                      that.propData.resetContentType ||
-                      "application/json;charset=UTF-8",
+                      that.propData.resetContentType || "application/json;charset=UTF-8",
                   }
                 : {},
             }
@@ -1141,7 +1114,7 @@ export default {
         // url: IDM.url.getWebPath(resultData.filePath),
       };
       item.selectedList.push(newObject);
-      let customParam = {...IDM.setting.webRoot};
+      let customParam = { ...IDM.setting.webRoot };
       if (item.useCtrlAttr.customParam) {
         customParam = item.useCtrlAttr.customParam;
       }
@@ -1151,11 +1124,7 @@ export default {
           const showFiledName = item.useCtrlAttr.showFiledName;
           let resultData = res.data.data;
           try {
-            resultData = this.replaceExpData(
-              showFiledName,
-              "resultData",
-              res.data
-            );
+            resultData = this.replaceExpData(showFiledName, "resultData", res.data);
           } catch (error) {}
           /**
            * 返回结果：
@@ -1244,8 +1213,7 @@ export default {
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       optionList &&
@@ -1269,20 +1237,13 @@ export default {
     /**
      * optionList 数据数组,childKey 子级Key，当前父级parentData
      */
-    unSelectParentTreeNode(
-      item,
-      allOptionList,
-      optionList,
-      childKey,
-      parentData
-    ) {
+    unSelectParentTreeNode(item, allOptionList, optionList, childKey, parentData) {
       const keyValueName =
         item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       optionList &&
@@ -1325,16 +1286,14 @@ export default {
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       optionList &&
         optionList.forEach((sitem) => {
           const keyValue = sitem[keyValueName];
           if (!key) {
-            const itemSelectedListKey =
-              "," + item.selectedListKey.join(",") + ",";
+            const itemSelectedListKey = "," + item.selectedListKey.join(",") + ",";
             //是子节点，全部选中
             if (itemSelectedListKey.indexOf("," + keyValue + ",") == -1) {
               let ssitem = _.cloneDeep(sitem);
@@ -1357,20 +1316,13 @@ export default {
     /**
      * optionList 数据数组,childKey 子级Key，当前父级parentData
      */
-    selectAllParentTreeNode(
-      item,
-      allOptionList,
-      optionList,
-      childKey,
-      parentData
-    ) {
+    selectAllParentTreeNode(item, allOptionList, optionList, childKey, parentData) {
       const keyValueName =
         item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       const itemSelectedListKey = "," + item.selectedListKey.join(",") + ",";
@@ -1386,9 +1338,7 @@ export default {
                 for (let index = 0; index < childrenData.length; index++) {
                   const element = childrenData[index];
                   if (
-                    itemSelectedListKey.indexOf(
-                      "," + element[keyValueName] + ","
-                    ) == -1
+                    itemSelectedListKey.indexOf("," + element[keyValueName] + ",") == -1
                   ) {
                     noExistsCount++;
                     break;
@@ -1444,9 +1394,7 @@ export default {
           item.selectedListKey = [];
         }
         if (
-          ("," + item.selectedListKey.join(",") + ",").indexOf(
-            "," + e.key + ","
-          ) > -1
+          ("," + item.selectedListKey.join(",") + ",").indexOf("," + e.key + ",") > -1
         ) {
           //选择的已存在，不进行选择，但还要重新赋值，不然还是会选上
           this.changePanelSelectOrderSetFormValue(item);
@@ -1458,8 +1406,7 @@ export default {
             if (
               e.key ==
               sitem[
-                item.useCtrlAttr.replaceFields &&
-                item.useCtrlAttr.replaceFields.value
+                item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
                   ? item.useCtrlAttr.replaceFields.value
                   : "value"
               ]
@@ -1525,8 +1472,7 @@ export default {
               if (
                 fkey ==
                 sitem[
-                  item.useCtrlAttr.replaceFields &&
-                  item.useCtrlAttr.replaceFields.value
+                  item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
                     ? item.useCtrlAttr.replaceFields.value
                     : "value"
                 ]
@@ -1558,12 +1504,12 @@ export default {
     panelItemClose(item, element, index) {
       this.dropDownDeSelect(
         {
-          key: element[
-            item.useCtrlAttr.replaceFields &&
-            item.useCtrlAttr.replaceFields.value
-              ? item.useCtrlAttr.replaceFields.value
-              : "value"
-          ],
+          key:
+            element[
+              item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
+                ? item.useCtrlAttr.replaceFields.value
+                : "value"
+            ],
         },
         item
       );
@@ -1575,10 +1521,7 @@ export default {
      * keyValue:不为空代表要移除他的下级
      */
     removeAllChildrenData(item, optionList, keyValue) {
-      if (
-        !item.selectedList ||
-        (item.selectedList && item.selectedList.length == 0)
-      ) {
+      if (!item.selectedList || (item.selectedList && item.selectedList.length == 0)) {
         return;
       }
       const keyValueName =
@@ -1586,8 +1529,7 @@ export default {
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       optionList &&
@@ -1621,10 +1563,7 @@ export default {
      * 移除所有的父节点，遇到选中且没有子节点的就保留，如果有子节点就移除
      */
     removeAllParentData(item, optionList) {
-      if (
-        !item.selectedList ||
-        (item.selectedList && item.selectedList.length == 0)
-      ) {
+      if (!item.selectedList || (item.selectedList && item.selectedList.length == 0)) {
         return;
       }
       const keyValueName =
@@ -1632,8 +1571,7 @@ export default {
           ? item.useCtrlAttr.replaceFields.value
           : "value";
       const keyChildrenName =
-        item.useCtrlAttr.replaceFields &&
-        item.useCtrlAttr.replaceFields.children
+        item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
           ? item.useCtrlAttr.replaceFields.children
           : "children";
       optionList &&
@@ -1809,11 +1747,7 @@ export default {
      */
     async loadAllCtrlOption(itemObject) {
       //dataType:"数据请求类型，code：请求数据代码值，options：代表直接使用静态数据，url：接口地址，sql：sql语句方式"
-      if (
-        itemObject &&
-        itemObject.useCtrlAttr &&
-        itemObject.useCtrlAttr.dataType
-      ) {
+      if (itemObject && itemObject.useCtrlAttr && itemObject.useCtrlAttr.dataType) {
         let resultOptions,
           paramObject = { ...this.commonParam() };
         switch (itemObject.useCtrlAttr.dataType) {
@@ -1835,9 +1769,10 @@ export default {
                 ...itemObject.useCtrlAttr.customParam,
               };
             }
-            await window.IDM.http[
-              itemObject.useCtrlAttr.interfaceType || "get"
-            ](itemObject.useCtrlAttr.interfaceUrl, paramObject).then((res) => {
+            await window.IDM.http[itemObject.useCtrlAttr.interfaceType || "get"](
+              itemObject.useCtrlAttr.interfaceUrl,
+              paramObject
+            ).then((res) => {
               //显示字段能自定义
               resultOptions = res.data;
             });
@@ -1852,9 +1787,10 @@ export default {
             if (itemObject.useCtrlAttr.metaKey) {
               paramObject["metaKey"] = itemObject.useCtrlAttr.metaKey;
             }
-            await window.IDM.http[
-              itemObject.useCtrlAttr.interfaceType || "get"
-            ](this.propData.sqlDataIntelface, paramObject).then((res) => {
+            await window.IDM.http[itemObject.useCtrlAttr.interfaceType || "get"](
+              this.propData.sqlDataIntelface,
+              paramObject
+            ).then((res) => {
               //显示字段能自定义
               resultOptions = res.data;
             });
@@ -1864,11 +1800,7 @@ export default {
           const showFiledName = itemObject.useCtrlAttr.showFiledName;
           let optionList = [];
           try {
-            optionList = this.replaceExpData(
-              showFiledName,
-              "resultData",
-              resultOptions
-            );
+            optionList = this.replaceExpData(showFiledName, "resultData", resultOptions);
           } catch (error) {}
           if (itemObject.useCtrlAttr.replaceFields) {
             const replaceFields = itemObject.useCtrlAttr.replaceFields;
@@ -1893,10 +1825,7 @@ export default {
             itemObject.selectOptionList = [];
           }
           this.findStr = ",";
-          this.switchTreeDataToOptionList(
-            itemObject.useCtrlAttr.options,
-            itemObject
-          );
+          this.switchTreeDataToOptionList(itemObject.useCtrlAttr.options, itemObject);
           this.findStr = "";
         }
       }
@@ -1906,8 +1835,7 @@ export default {
         //去除重复过滤的下
         const dKey =
           ditem[
-            item.useCtrlAttr.replaceFields &&
-            item.useCtrlAttr.replaceFields.value
+            item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
               ? item.useCtrlAttr.replaceFields.value
               : "value"
           ];
@@ -1923,8 +1851,7 @@ export default {
           }
           const nditem = _.cloneDeep(ditem);
           delete nditem[
-            item.useCtrlAttr.replaceFields &&
-            item.useCtrlAttr.replaceFields.children
+            item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
               ? item.useCtrlAttr.replaceFields.children
               : "children"
           ];
@@ -1934,8 +1861,7 @@ export default {
         }
         const dchildren =
           ditem[
-            item.useCtrlAttr.replaceFields &&
-            item.useCtrlAttr.replaceFields.children
+            item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.children
               ? item.useCtrlAttr.replaceFields.children
               : "children"
           ];
@@ -1948,7 +1874,7 @@ export default {
      * 替换表达式的数据
      */
     replaceExpData(filedExpression, dataName, resultData) {
-      if(!filedExpression){
+      if (!filedExpression) {
         return resultData;
       }
       //给defaultValue设置dataFiled的值
@@ -1956,11 +1882,7 @@ export default {
       filedExp = dataName + (filedExp.startsWiths("[") ? "" : ".") + filedExp;
       var dataObject = { IDM: window.IDM };
       dataObject[dataName] = resultData;
-      return window.IDM.express.replace.call(
-        this,
-        "@[" + filedExp + "]",
-        dataObject
-      );
+      return window.IDM.express.replace.call(this, "@[" + filedExp + "]", dataObject);
     },
     /**
      * 提供父级组件调用的刷新prop数据组件
@@ -1978,13 +1900,11 @@ export default {
       if (this.propData.bgSize && this.propData.bgSize == "custom") {
         styleObject["background-size"] =
           (this.propData.bgSizeWidth
-            ? this.propData.bgSizeWidth.inputVal +
-              this.propData.bgSizeWidth.selectVal
+            ? this.propData.bgSizeWidth.inputVal + this.propData.bgSizeWidth.selectVal
             : "auto") +
           " " +
           (this.propData.bgSizeHeight
-            ? this.propData.bgSizeHeight.inputVal +
-              this.propData.bgSizeHeight.selectVal
+            ? this.propData.bgSizeHeight.inputVal + this.propData.bgSizeHeight.selectVal
             : "auto");
       } else if (this.propData.bgSize) {
         styleObject["background-size"] = this.propData.bgSize;
@@ -2040,9 +1960,9 @@ export default {
               }
               break;
             case "bgImgUrl":
-              styleObject[
-                "background-image"
-              ] = `url(${window.IDM.url.getWebPath(element)})`;
+              styleObject["background-image"] = `url(${window.IDM.url.getWebPath(
+                element
+              )})`;
               break;
             case "positionX":
               //背景横向偏移
@@ -2095,13 +2015,11 @@ export default {
       }
       if (this.propData.btnPositionX && this.propData.btnPositionX.inputVal) {
         styleObject["background-position-x"] =
-          this.propData.btnPositionX.inputVal +
-          this.propData.btnPositionX.selectVal;
+          this.propData.btnPositionX.inputVal + this.propData.btnPositionX.selectVal;
       }
       if (this.propData.btnPositionY && this.propData.btnPositionY.inputVal) {
         styleObject["background-position-y"] =
-          this.propData.btnPositionY.inputVal +
-          this.propData.btnPositionY.selectVal;
+          this.propData.btnPositionY.inputVal + this.propData.btnPositionY.selectVal;
       }
       for (const key in this.propData) {
         if (this.propData.hasOwnProperty.call(this.propData, key)) {
@@ -2145,9 +2063,9 @@ export default {
               }
               break;
             case "btnBgImgUrl":
-              styleObject[
-                "background-image"
-              ] = `url(${window.IDM.url.getWebPath(element)})`;
+              styleObject["background-image"] = `url(${window.IDM.url.getWebPath(
+                element
+              )})`;
               break;
             case "btnBgRepeat":
               //平铺模式
@@ -2198,152 +2116,167 @@ export default {
           "border-color": item.mainColor ? IDM.hex8ToRgbaString(item.mainColor.hex8) : "",
         };
         let cssObject_border_minor = {
-          "border-color": item.minorColor ? IDM.hex8ToRgbaString(item.minorColor.hex8) : "",
+          "border-color": item.minorColor
+            ? IDM.hex8ToRgbaString(item.minorColor.hex8)
+            : "",
         };
         let cssObject_border_minor1 = {
-          "border-color": item.minorColor1 ? IDM.hex8ToRgbaString(item.minorColor1.hex8) : "",
+          "border-color": item.minorColor1
+            ? IDM.hex8ToRgbaString(item.minorColor1.hex8)
+            : "",
         };
         let cssObject_background_main = {
-          "background-color": item.mainColor ? IDM.hex8ToRgbaString(item.mainColor.hex8) : "",
+          "background-color": item.mainColor
+            ? IDM.hex8ToRgbaString(item.mainColor.hex8)
+            : "",
         };
         let cssObject_background_minor = {
-          "background-color": item.minorColor ? IDM.hex8ToRgbaString(item.minorColor.hex8) : "",
+          "background-color": item.minorColor
+            ? IDM.hex8ToRgbaString(item.minorColor.hex8)
+            : "",
         };
         let cssObject_background_minor1 = {
-          "background-color": item.minorColor1 ? IDM.hex8ToRgbaString(item.minorColor1.hex8) : "",
+          "background-color": item.minorColor1
+            ? IDM.hex8ToRgbaString(item.minorColor1.hex8)
+            : "",
         };
         let cssObject_box_shadow = {
-          "box-shadow": item.boxShadow|| "",
+          "box-shadow": item.boxShadow || "",
         };
         let cssObject_box_shadow1 = {
-          "box-shadow": item.boxShadow1|| "",
+          "box-shadow": item.boxShadow1 || "",
         };
         //背景色汇总
-        var bgListClass=[
+        var bgListClass = [
           ".ant-switch-checked",
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)::before",
           ".ant-radio-inner::after",
           ".ant-checkbox-checked .ant-checkbox-inner",
           ".ant-spin-dot-item",
-          ".ant-btn-primary"
-        ]
-        var allBgClass=[];
-        bgListClass.forEach(iclass=>{
-          allBgClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-btn-primary",
+        ];
+        var allBgClass = [];
+        bgListClass.forEach((iclass) => {
+          allBgClass.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass.join(","),
-          cssObject_background_main
-        );
+        IDM.setStyleToPageHead(allBgClass.join(","), cssObject_background_main);
         //背景色悬浮框
-        bgListClass=[
+        bgListClass = [
           ".ant-select-tree-checkbox-checked .ant-select-tree-checkbox-inner",
           ".ant-select-tree-checkbox-indeterminate .ant-select-tree-checkbox-inner::after",
           ".ant-tree-checkbox-checked .ant-tree-checkbox-inner",
           ".ant-tree-checkbox-indeterminate .ant-tree-checkbox-inner::after",
-          ".ant-calendar-date:active"
-        ]
-        allBgClass=[];
-        bgListClass.forEach(iclass=>{
-          allBgClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-calendar-date:active",
+        ];
+        allBgClass = [];
+        bgListClass.forEach((iclass) => {
+          allBgClass.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass.join(","),
-          cssObject_background_main
-        );
+        IDM.setStyleToPageHead(allBgClass.join(","), cssObject_background_main);
         //背景副色汇总
-        var bgListClass_minorColor=[
+        var bgListClass_minorColor = [
           ".ant-slider:hover .ant-slider-track ",
           ".ant-btn-primary:focus",
-          ".ant-btn-primary:hover"
-        ]
-        var allBgClass_minorColor=[];
-        bgListClass_minorColor.forEach(iclass=>{
-          allBgClass_minorColor.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-btn-primary:hover",
+        ];
+        var allBgClass_minorColor = [];
+        bgListClass_minorColor.forEach((iclass) => {
+          allBgClass_minorColor.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass_minorColor.join(","),
+        IDM.setStyleToPageHead(
+          allBgClass_minorColor.join(","),
           cssObject_background_minor
         );
         //悬浮在body层级的框
-        bgListClass_minorColor=[
+        bgListClass_minorColor = [
           ".ant-select-tree li .ant-select-tree-node-content-wrapper.ant-select-tree-node-selected ",
           ".ant-tree li .ant-tree-node-content-wrapper.ant-tree-node-selected",
-          ".ant-calendar-date:hover"
-        ]
-        allBgClass_minorColor=[];
-        bgListClass_minorColor.forEach(iclass=>{
-          allBgClass_minorColor.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-calendar-date:hover",
+        ];
+        allBgClass_minorColor = [];
+        bgListClass_minorColor.forEach((iclass) => {
+          allBgClass_minorColor.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass_minorColor.join(","),
+        IDM.setStyleToPageHead(
+          allBgClass_minorColor.join(","),
           cssObject_background_minor
         );
         //背景副色1汇总
-        var bgListClass_minorColor1=[
+        var bgListClass_minorColor1 = [
           ".ant-slider-track",
-          ".ant-upload-list-item:hover .ant-upload-list-item-info"
-        ]
-        var allBgClass_minorColor1=[];
-        bgListClass_minorColor1.forEach(iclass=>{
-          allBgClass_minorColor1.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-upload-list-item:hover .ant-upload-list-item-info",
+        ];
+        var allBgClass_minorColor1 = [];
+        bgListClass_minorColor1.forEach((iclass) => {
+          allBgClass_minorColor1.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass_minorColor1.join(","),
+        IDM.setStyleToPageHead(
+          allBgClass_minorColor1.join(","),
           cssObject_background_minor1
         );
         //背景悬浮框汇总
-        bgListClass_minorColor1=[
+        bgListClass_minorColor1 = [
           ".ant-tree li .ant-tree-node-content-wrapper:hover",
-          ".ant-calendar-selected-day .ant-calendar-date"
-        ]
-        allBgClass_minorColor1=[];
-        bgListClass_minorColor1.forEach(iclass=>{
-          allBgClass_minorColor1.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-calendar-selected-day .ant-calendar-date",
+        ];
+        allBgClass_minorColor1 = [];
+        bgListClass_minorColor1.forEach((iclass) => {
+          allBgClass_minorColor1.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass_minorColor1.join(","),
+        IDM.setStyleToPageHead(
+          allBgClass_minorColor1.join(","),
           cssObject_background_minor1
         );
         //悬浮在body层级的框
-        bgListClass_minorColor1=[
+        bgListClass_minorColor1 = [
           ".ant-select-dropdown-menu-item:hover:not(.ant-select-dropdown-menu-item-disabled)",
           ".ant-select-dropdown-menu-item-active:not(.ant-select-dropdown-menu-item-disabled)",
           ".ant-select-tree li .ant-select-tree-node-content-wrapper:hover",
           ".ant-cascader-menu-item:hover",
-          ".ant-time-picker-panel-select li:hover"
-        ]
-        allBgClass_minorColor1=[];
-        bgListClass_minorColor1.forEach(iclass=>{
-          allBgClass_minorColor1.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-time-picker-panel-select li:hover",
+        ];
+        allBgClass_minorColor1 = [];
+        bgListClass_minorColor1.forEach((iclass) => {
+          allBgClass_minorColor1.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allBgClass_minorColor1.join(","),
+        IDM.setStyleToPageHead(
+          allBgClass_minorColor1.join(","),
           cssObject_background_minor1
         );
         //边框汇总
-        var bdListClass=[
+        var bdListClass = [
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child",
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)",
           ".ant-radio-checked .ant-radio-inner",
@@ -2376,21 +2309,23 @@ export default {
           ".control-center-panel-select-group .control-center-panel-select-add",
           ".ant-btn:hover",
           ".ant-btn:focus",
-          ".ant-btn-primary"
-        ]
-        var allBdClass=[];
-        bdListClass.forEach(iclass=>{
-          allBdClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-btn-primary",
+        ];
+        var allBdClass = [];
+        bdListClass.forEach((iclass) => {
+          allBdClass.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBdClass.join(","),
-          cssObject_border_main
-        );
+        IDM.setStyleToPageHead(allBdClass.join(","), cssObject_border_main);
         //悬浮在body层级的框
-        bdListClass=[
+        bdListClass = [
           ".ant-select-tree-checkbox-wrapper:hover .ant-select-tree-checkbox-inner",
           ".ant-select-tree-checkbox:hover .ant-select-tree-checkbox-inner",
           ".ant-select-tree-checkbox-input:focus + .ant-select-tree-checkbox-inner",
@@ -2402,53 +2337,51 @@ export default {
           ".ant-tree-checkbox-input:focus + .ant-tree-checkbox-inner",
           ".ant-tree-checkbox-checked::after",
           ".ant-tree-checkbox-checked .ant-tree-checkbox-inner",
-          ".ant-calendar-today .ant-calendar-date"
-        ]
-        allBdClass=[];
-        bdListClass.forEach(iclass=>{
-          allBdClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-calendar-today .ant-calendar-date",
+        ];
+        allBdClass = [];
+        bdListClass.forEach((iclass) => {
+          allBdClass.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allBdClass.join(","),
-          cssObject_border_main
-        );
+        IDM.setStyleToPageHead(allBdClass.join(","), cssObject_border_main);
         //边框副色汇总
-        var bdListClass_minorColor=[
+        var bdListClass_minorColor = [
           ".ant-slider:hover .ant-slider-handle:not(.ant-tooltip-open)",
           ".ant-btn-primary:focus",
-          ".ant-btn-primary:hover"
-        ]
-        var allBdClass_minorColor=[];
-        bdListClass_minorColor.forEach(iclass=>{
-          allBdClass_minorColor.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-btn-primary:hover",
+        ];
+        var allBdClass_minorColor = [];
+        bdListClass_minorColor.forEach((iclass) => {
+          allBdClass_minorColor.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBdClass_minorColor.join(","),
-          cssObject_border_minor
-        );
+        IDM.setStyleToPageHead(allBdClass_minorColor.join(","), cssObject_border_minor);
         //边框副色汇总
-        var bdListClass_minorColor1=[
-          ".ant-slider-handle"
-        ]
-        var allBdClass_minorColor1=[];
-        bdListClass_minorColor1.forEach(iclass=>{
-          allBdClass_minorColor1.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+        var bdListClass_minorColor1 = [".ant-slider-handle"];
+        var allBdClass_minorColor1 = [];
+        bdListClass_minorColor1.forEach((iclass) => {
+          allBdClass_minorColor1.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allBdClass_minorColor1.join(","),
-          cssObject_border_minor1
-        );
+        IDM.setStyleToPageHead(allBdClass_minorColor1.join(","), cssObject_border_minor1);
         //颜色汇总
-        var colorListClass=[
+        var colorListClass = [
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):first-child",
           ".ant-radio-button-wrapper:hover",
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled)",
@@ -2459,40 +2392,38 @@ export default {
           ".control-center-panel-select-group .control-center-panel-select-add",
           ".ant-btn:hover",
           ".ant-btn:focus",
-          ".ant-upload-list-item-info a"
-        ]
-        var allColorClass=[];
-        colorListClass.forEach(iclass=>{
-          allColorClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-upload-list-item-info a",
+        ];
+        var allColorClass = [];
+        colorListClass.forEach((iclass) => {
+          allColorClass.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allColorClass.join(","),
-          cssObject_color_main
-        );
+        IDM.setStyleToPageHead(allColorClass.join(","), cssObject_color_main);
         //悬浮框的颜色汇总
-        colorListClass=[
+        colorListClass = [
           ".control-center-panel-select-group-item:hover",
           "a",
           ".ant-time-picker-panel-select li:focus",
           ".ant-calendar-header a:hover",
-          ".ant-calendar-today .ant-calendar-date"
-        ]
-        allColorClass=[];
-        colorListClass.forEach(iclass=>{
-          allColorClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " ." +
-            this.moduleObject.id +" "+iclass)
+          ".ant-calendar-today .ant-calendar-date",
+        ];
+        allColorClass = [];
+        colorListClass.forEach((iclass) => {
+          allColorClass.push(
+            "." + themeNamePrefix + item.key + " ." + this.moduleObject.id + " " + iclass
+          );
         });
-        IDM.setStyleToPageHead(allColorClass.join(","),
-          cssObject_color_main
-        );
+        IDM.setStyleToPageHead(allColorClass.join(","), cssObject_color_main);
         //阴影颜色
-        var boxShadowListClass=[
+        var boxShadowListClass = [
           ".ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):focus-within",
           ".ant-radio-input:focus + .ant-radio-inner",
           ".ant-input:focus",
@@ -2502,42 +2433,48 @@ export default {
           ".ant-select-selection:focus",
           ".ant-select-selection:active",
           ".ant-time-picker-input:focus",
-          ".ant-cascader-picker:focus .ant-cascader-input"
-        ]
-        var allboxShadowClass=[];
-        boxShadowListClass.forEach(iclass=>{
-          allboxShadowClass.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+          ".ant-cascader-picker:focus .ant-cascader-input",
+        ];
+        var allboxShadowClass = [];
+        boxShadowListClass.forEach((iclass) => {
+          allboxShadowClass.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allboxShadowClass.join(","),
-          cssObject_box_shadow
-        );
+        IDM.setStyleToPageHead(allboxShadowClass.join(","), cssObject_box_shadow);
         //阴影颜色1
-        var boxShadowListClass1=[
-          ".ant-slider-handle:focus"
-        ]
-        var allboxShadowClass1=[];
-        boxShadowListClass1.forEach(iclass=>{
-          allboxShadowClass1.push("." +
-            themeNamePrefix +
-            item.key +
-            " #" +
-            (this.moduleObject.packageid || this.moduleObject.id) +" "+iclass)
+        var boxShadowListClass1 = [".ant-slider-handle:focus"];
+        var allboxShadowClass1 = [];
+        boxShadowListClass1.forEach((iclass) => {
+          allboxShadowClass1.push(
+            "." +
+              themeNamePrefix +
+              item.key +
+              " #" +
+              (this.moduleObject.packageid || this.moduleObject.id) +
+              " " +
+              iclass
+          );
         });
-        IDM.setStyleToPageHead(allboxShadowClass1.join(","),
-          cssObject_box_shadow1
-        );
+        IDM.setStyleToPageHead(allboxShadowClass1.join(","), cssObject_box_shadow1);
         //变量
         window.IDM.setStyleToPageHead(
           "." +
             themeNamePrefix +
             item.key +
-            " #" +(this.moduleObject.packageid || this.moduleObject.id)+" ", {
-          "--antd-wave-shadow-color":cssObject_color_main.color
-        });
+            " #" +
+            (this.moduleObject.packageid || this.moduleObject.id) +
+            " ",
+          {
+            "--antd-wave-shadow-color": cssObject_color_main.color,
+          }
+        );
       }
     },
     /**
@@ -2593,8 +2530,7 @@ export default {
               item.selectedListKey = [];
             }
             const keyValueName =
-              item.useCtrlAttr.replaceFields &&
-              item.useCtrlAttr.replaceFields.value
+              item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
                 ? item.useCtrlAttr.replaceFields.value
                 : "value";
             item.selectedList.forEach((sitem) => {
@@ -2666,6 +2602,26 @@ export default {
                     case "checkbox":
                       try {
                         setParam[item.attrCode] = JSON.parse(item.attrData);
+                        //进行过滤
+                        if (sitem.useCtrlAttr && sitem.useCtrlAttr.options) {
+                          let optionList = sitem.useCtrlAttr.options;
+                          let keyName =
+                            (sitem.useCtrlAttr.replaceFields &&
+                              sitem.useCtrlAttr.replaceFields["key"]) ||
+                            "key";
+                          if (
+                            IDM.type(setParam[item.attrCode]) == "array" &&
+                            IDM.type(optionList) == "array"
+                          ) {
+                            let newAttrData = setParam[item.attrCode].filter(
+                              (acitem) =>
+                                optionList.filter(
+                                  (aditem) => aditem[keyName] == acitem[keyName]
+                                ).length > 0
+                            );
+                            setParam[item.attrCode] = newAttrData;
+                          }
+                        }
                       } catch (error) {}
                       break;
                     case "switch":
@@ -2698,8 +2654,7 @@ export default {
               item.selectedListKey = [];
             }
             const keyValueName =
-              item.useCtrlAttr.replaceFields &&
-              item.useCtrlAttr.replaceFields.value
+              item.useCtrlAttr.replaceFields && item.useCtrlAttr.replaceFields.value
                 ? item.useCtrlAttr.replaceFields.value
                 : "value";
             item.selectedList.forEach((sitem) => {
