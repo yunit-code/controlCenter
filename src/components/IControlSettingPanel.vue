@@ -1771,7 +1771,8 @@ export default {
             }
             await window.IDM.http[itemObject.useCtrlAttr.interfaceType || "get"](
               itemObject.useCtrlAttr.interfaceUrl,
-              paramObject
+              paramObject,
+              itemObject.useCtrlAttr.interfaceOption
             ).then((res) => {
               //显示字段能自定义
               resultOptions = res.data;
