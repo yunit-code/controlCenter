@@ -552,6 +552,159 @@
               :allowClear="item.useCtrlAttr.allowClear === false ? false : true"
               :popupClassName="moduleObject.id"
             />
+            <!--表格：table-->
+            <div
+                :class="'control-setting-table-index-'+index"
+                v-else-if="item.useCtrlId == 'table'">
+              <add-new-button
+                v-if="item.useCtrlAttr.newPosition == 'top' && item.useCtrlAttr.componentEditStatus!==false"
+                :propData.sync="item.useCtrlAttr"
+                @click="addComponentData(item)"
+              />
+              <div
+                :class="`table-field-layout-table table-field-theme-${item.useCtrlAttr.tableTheme||'zebra'}`"
+              >
+                <a-input
+                    v-show="false"
+                    :class="convertTableAttrToStyleObject(item,index)"
+                    v-decorator="[item.attrCode, { rules: [{
+                      validator:async(rule, value, callback) => tableValidator(rule, value, callback,item)
+                    }],
+                    validateTrigger:'change' }]"
+                  />
+                  <div
+                    v-if="item.useCtrlAttr.showTableHeader!==false"
+                    class="table-field-table-head"
+                  >
+                    <div
+                      class="table-field-table-cell"
+                      v-if="item.useCtrlAttr.showTableNo!==false"
+                      :style="{
+                        'text-align': 'center',
+                        width:
+                        item.useCtrlAttr.tableNoWidth|| '50px',
+                      }"
+                    >
+                      序号
+                    </div>
+                    <div
+                      v-for="(sitem, sindex) in item.useCtrlAttr.tableFiledList"
+                      :style="{
+                        width:
+                          sitem.width || 'auto',
+                      }"
+                      :key="sindex"
+                      class="table-field-table-cell"
+                    >
+                      {{ sitem.title }}
+                    </div>
+                    <div
+                      class="table-field-table-cell"
+                      v-if="item.useCtrlAttr.showOperateButtonList!==false"
+                      :style="{
+                        width:
+                        item.useCtrlAttr.tableOperateWidth|| '160px',
+                      }"
+                    >
+                      操作
+                    </div>
+                  </div>
+                  <div
+                    v-for="(sitem, sindex) in item.selectedList"
+                    :key="sitem[item.useCtrlAttr.indexDataFiled||'idmKey']"
+                    class="table-field-table-row"
+                  >
+                    <div
+                      class="table-field-table-cell item-idx"
+                      v-if="item.useCtrlAttr.showTableNo!==false"
+                    >
+                      {{ sindex + 1 }}
+                    </div>
+                    <div
+                      class="table-field-table-cell"
+                      v-for="(col, sindex) in item.useCtrlAttr.tableFiledList"
+                      :style="{
+                        width: col.width || 'auto',
+                      }"
+                      :key="sindex"
+                    >
+                      <!--表格字段的控件-->
+                      <a-input
+                        :size="col.size||'default'"
+                        v-if="col.type=='input'"
+                        v-model="sitem[col.dataIndex]"
+                        @change="e => tableInputHandleChange(e.target.value, item, col.dataIndex)"
+                      />
+                      <a-switch
+                        :size="col.size||'default'" 
+                        v-else-if="col.type=='switch'" 
+                        v-model="sitem[col.dataIndex]"
+                        @change="(checked,e) => tableInputHandleChange(checked, item, col.dataIndex)"
+                      ></a-switch>
+                      <a-select
+                        :size="col.size||'default'" 
+                        :labelInValue="col.type=='mSelect'" 
+                        :mode="col.type=='mSelect'?'multiple':'default'" 
+                        v-else-if="col.type=='select'||col.type=='mSelect'" 
+                        v-model="sitem[col.dataIndex]" 
+                        @change="(value,e) => tableInputHandleChange(value, item, col.dataIndex)"
+                        style="min-width:100%">
+                        <a-select-option v-for="oitem in col.dictionary" :key="oitem.key||oitem.value" :value="oitem.value||oitem.key">
+                          {{oitem.title}}
+                        </a-select-option>
+                      </a-select>
+                      <a-radio-group
+                        :size="col.size||'default'" 
+                        v-else-if="col.type=='radio'" 
+                        :name="col.dataIndex" 
+                        @change="e => tableInputHandleChange(e, item, col.dataIndex)"
+                        v-model="sitem[col.dataIndex]">
+                        <a-radio v-for="oitem in col.dictionary" :key="oitem.key||oitem.value" :value="oitem.value||oitem.key">
+                          {{oitem.title}}
+                        </a-radio>
+                      </a-radio-group>
+                      <a-upload
+                        v-else-if="col.type == 'upload'"
+                        :file-list="sitem[col.dataIndex]"
+                        :name="col.inputFileName || 'file'"
+                        :list-type="col.listType || 'text'"
+                        :accept="col.uploadSuffix || 'image/*'"
+                        :multiple="col.multipleMode === true"
+                        :customRequest="(file) => uploadFileHandleTable(file, item,sitem,col)"
+                        @change="(file) => uploadFileChangeTable(file, item,sitem,col)"
+                        style="vertical-align: middle;"
+                        :class="sitem[col.dataIndex]&&col.uploadMaxNumber&&sitem[col.dataIndex].length>=parseInt(col.uploadMaxNumber)?'idm-control-setting-panel-upload-noadd':''"
+                      >
+                          <a-icon v-if="col.listType=='picture-card'" :type="'plus'" />
+                          <a-button v-else>
+                            <a-icon type="upload" /> {{ col.buttonName||'点击上传' }}
+                          </a-button>
+                      </a-upload>
+                    </div>
+                    <div
+                      class="table-field-table-cell"
+                      v-if="item.useCtrlAttr.showOperateButtonList!==false"
+                    >
+                      <operate-button-list
+                        :propData.sync="item.useCtrlAttr"
+                        :moduleObject.sync="moduleObject"
+                        :itemData="sitem"
+                        :item="item"
+                        :itemIndex="sindex"
+                        :componentData.sync="item.selectedList"
+                        :componentEditStatus="item.useCtrlAttr.componentEditStatus!==false"
+                        @click="operateButtonClickHandle"
+                      />
+                    </div>
+                  </div>
+                </div>
+              <add-new-button
+                v-if="item.useCtrlAttr.newPosition != 'top' && item.useCtrlAttr.componentEditStatus!==false"
+                :propData.sync="item.useCtrlAttr"
+                @click="addComponentData(item)"
+              />
+            </div>
+            
           </a-form-item>
           <a-form-item
             v-if="propData.ctrlButtonPosition == 'formlast'"
@@ -608,9 +761,12 @@
 </template>
 
 <script>
+const BUTTON_HANDLE_TYPE = ["none","insert","del","upsort","downsort"];
 import { Sketch } from "vue-color";
 import draggable from "vuedraggable";
 import locale from "ant-design-vue/lib/locale-provider/zh_CN";
+import AddNewButton from "../commonComponents/AddNewButton.vue";
+import OperateButtonList from "../commonComponents/OperateButtonList.vue";
 export default {
   name: "IControlSettingPanel",
   components: {
@@ -620,6 +776,8 @@ export default {
       functional: true,
       render: (h, ctx) => ctx.props.vnodes,
     },
+    AddNewButton,
+    OperateButtonList,
   },
   data() {
     return {
@@ -910,6 +1068,199 @@ export default {
     },
   },
   methods: {
+    async tableValidator(rule, value, callback,item){
+        try{
+          if(item.useCtrlAttr.required&&item.selectedList.length==0){
+            return Promise.reject(item.useCtrlAttr.message);
+          }else{
+            return Promise.resolve();
+          }
+        }catch(err){
+          return Promise.reject(item.useCtrlAttr.message);
+        }
+    },
+    /**
+     * 表格样式转换
+     */
+     convertTableAttrToStyleObject(item,index) {
+      let propData = item.useCtrlAttr;
+      var styleObject = {},
+        bodyStyleObject = {},
+        zebraStyleObject = {},
+        boderStyleObject = {};
+      const allKey = [
+        "tableHeaderfont",
+        "tableHeaderBgColor",
+        "tableBodyfont",
+        "tableBodyBgColor",
+        "tableBoderNumber",
+        "tableBoderColor",
+        "tableBoderType",
+      ];
+      for (let index = 0; index < allKey.length; index++) {
+        const key = allKey[index];
+        if (propData.hasOwnProperty.call(propData, key)) {
+          const element = propData[key];
+          if (!element && element !== false && element != 0) {
+            continue;
+          }
+          switch (key) {
+            case "tableHeaderfont":
+              IDM.style.setFontStyle(styleObject, element);
+              break;
+            case "tableHeaderBgColor":
+              if (element && element.hex8) {
+                styleObject["background-color"] = IDM.hex8ToRgbaString(element.hex8);
+              }
+              break;
+            case "tableBodyfont":
+              IDM.style.setFontStyle(bodyStyleObject, element);
+              break;
+            case "tableBodyBgColor":
+              if (element && element.hex8) {
+                zebraStyleObject["background-color"] = IDM.hex8ToRgbaString(element.hex8);
+              }
+              break;
+            case "tableBoderColor":
+              if (element && element.hex8) {
+                boderStyleObject[
+                  propData.tableTheme == "split"
+                    ? "border-bottom-color"
+                    : "border-color"
+                ] = IDM.hex8ToRgbaString(element.hex8);
+              }
+              break;
+            case "tableBoderNumber":
+              boderStyleObject[
+                propData.tableTheme == "split"
+                  ? "border-bottom-width"
+                  : "border-width"
+              ] = element + "px";
+              break;
+            case "tableBoderType":
+              boderStyleObject[
+                propData.tableTheme == "split"
+                  ? "border-bottom-style"
+                  : "border-style"
+              ] = element;
+              break;
+          }
+        }
+      }
+
+      Object.keys(styleObject).length &&
+        IDM.setStyleToPageHead(
+          this.moduleObject.id +
+            ` .control-setting-table-index-${index} .table-field-layout-table .table-field-table-head`,
+          styleObject
+        );
+      Object.keys(bodyStyleObject).length &&
+        IDM.setStyleToPageHead(
+          this.moduleObject.id +
+            ` .control-setting-table-index-${index} .table-field-layout-table .table-field-table-row>*`,
+          bodyStyleObject
+        );
+      Object.keys(zebraStyleObject).length &&
+        IDM.setStyleToPageHead(
+          this.moduleObject.id +
+            ` .control-setting-table-index-${index} .table-field-layout-table.table-field-theme-zebra>.table-field-table-row:nth-child(odd)`,
+          zebraStyleObject
+        );
+      propData.tableTheme != "zebra" &&
+        Object.keys(boderStyleObject).length &&
+        IDM.setStyleToPageHead(
+          this.moduleObject.id +
+            ` .control-setting-table-index-${index} .table-field-layout-table.table-field-theme-${propData.tableTheme} .table-field-table-cell`,
+          boderStyleObject
+        );
+    },
+    tableInputHandleChange(value, item, column) {
+      this.changePanelSelectOrderSetFormValue(item);
+    },
+    /**
+     * 操作按钮公共点击处理函数
+     * @param {*} item 当前的控制中心属性所有数据
+     * @param {*} itemData 当前的整条数据
+     * @param {*} itemIndex 当前数据的索引
+     * @param {*} configObject 当前操作的配置项
+     * @param {*} configIndex 当前操作按钮的配置索引
+     */
+    operateButtonClickHandle(item,itemData, itemIndex, configObject, configIndex) {
+      if (this.moduleObject.env == "develop") {
+        return;
+      }
+      switch (configObject.buttonHandleType) {
+        case "insert": //添加
+          this.addComponentData(item,itemIndex);
+          break;
+        case "del": //删除
+          this.removeComponentData(item, itemIndex);
+          break;
+        case "fold": //折叠
+          item.selectedList[itemIndex]["idmContainerFold"] = !item.selectedList[
+            itemIndex
+          ]["idmContainerFold"];
+          break;
+        case "upsort": //上移
+          if (itemIndex == 0) {
+            return;
+          }
+          item.selectedList[itemIndex - 1] = item.selectedList.splice(
+            itemIndex,
+            1,
+            item.selectedList[itemIndex - 1]
+          )[0];
+          break;
+        case "downsort": //下移
+          if (item.selectedList.length - 1 == itemIndex) {
+            return;
+          }
+          item.selectedList[itemIndex + 1] = item.selectedList.splice(
+            itemIndex,
+            1,
+            item.selectedList[itemIndex + 1]
+          )[0];
+          break;
+      }
+      if (
+        !BUTTON_HANDLE_TYPE.includes(configObject.buttonHandleType)&&typeof window[configObject.buttonHandleType]==="function"
+      ) {
+        window[configObject.buttonHandleType]({
+          index: itemIndex,
+          itemObject: itemData,
+          configObject,
+          configIndex,
+          item,
+        });
+      }
+      this.changePanelSelectOrderSetFormValue(item);
+    },
+    /**
+     * 添加数据
+     * @param {*} item当前操作的属性对象
+     * @param {*} index 要追加的索引，如果大于0则需要执行插入
+     */
+     addComponentData(item,index) {
+      if (this.moduleObject.env == "develop") {
+        return;
+      }
+      let idmContainerId = "index" + IDM.uuid();
+      let itemData = { [item.useCtrlAttr.indexDataFiled||'idmKey']: idmContainerId, idmContainerFold: false };
+      if(!item.selectedList){
+        item.selectedList=[];
+      }
+      if (index > -1) {
+        item.selectedList.splice(index + 1, 0, itemData);
+      } else {
+        item.selectedList.push(itemData);
+      }
+      if(index==undefined){
+        this.changePanelSelectOrderSetFormValue(item);
+      }
+    },
+    removeComponentData(item, index) {
+        item.selectedList.splice(index, 1);
+    },
     /**
      * 按钮点击事件
      */
@@ -1080,6 +1431,95 @@ export default {
         });
       }
       buttonItem.loading = false;
+    },
+    /**
+     * 表格的文件状态改变
+     * @param {*} file 文件对象
+     * @param {*} item 当前属性的item对象
+     * @param {*} sitem 当前操作的数据item对象
+     * @param {*} col 当前列的对象
+     */
+    uploadFileChangeTable({ file, fileList }, item,sitem,col) {
+      // this.fileList = fileList;
+      if (file && file.status == "removed") {
+        if(!sitem[col.dataIndex]){
+          sitem[col.dataIndex] = [];
+        }
+        sitem[col.dataIndex]?.forEach((fitem, index) => {
+          const isExists = fileList.filter((item) => item.uid == fitem.uid);
+          if (!isExists || (isExists && isExists.length == 0)) {
+            sitem[col.dataIndex].splice(index, 1);
+          }
+        });
+        this.changePanelSelectOrderSetFormValue(item);
+      }
+    },
+    /**
+     * 表格的上传文件处理
+     * @param {*} file 文件对象
+     * @param {*} item 当前属性的item对象
+     * @param {*} sitem 当前操作的数据item对象
+     * @param {*} col 当前列的对象
+     */
+    uploadFileHandleTable(file, item,sitem,col) {
+      if(!sitem[col.dataIndex]){
+        sitem[col.dataIndex] = [];
+      }
+      const action =
+      col.uploadAction || this.propData.fileUploadDataIntelface;
+      let that = this;
+      if(col.uploadMaxNumber&&sitem[col.dataIndex].length>=parseInt(col.uploadMaxNumber)){
+        IDM.message.warning("已超过最大上传数量:"+col.uploadMaxNumber);
+        return
+      }
+      let newObject = {
+        uid: new Date().getTime() + IDM.uuid(),
+        name: file.file.name,
+        status: "uploading",
+        // url: IDM.url.getWebPath(resultData.filePath),
+      };
+      sitem[col.dataIndex].push(newObject);
+      let customParam = { ...IDM.setting.webRoot };
+      if (col.customParam) {
+        customParam = col.customParam;
+      }
+      IDM.http
+        .upload(action, file.file, customParam)
+        .then((res) => {
+          const showFiledName = col.showFiledName;
+          let resultData = res.data?.data;
+          if(showFiledName){
+            try {
+              resultData = this.replaceExpData(showFiledName, "resultData", res.data);
+            } catch (error) {}
+          }
+          /**
+           * 返回结果：
+           * {
+           * fileName: "tab设置.png"
+           * filePath: "/upload/idmfiles\f22081da-9410-40bc-afa0-6b3106c45c1c.png"
+           * fileSize: "218KB"
+           * }
+           */
+          // console.log("上传数据结果",resultData);
+          newObject.status = "done";
+          newObject.url = IDM.url.getWebPath(resultData.filePath);
+          newObject.ourl = resultData.filePath;
+          //方便其他地方使用
+          newObject.src = newObject.ourl;
+          newObject.size = resultData.fileSize;
+          newObject.width = resultData.imageWidth;
+          newObject.height = resultData.imageHeight;
+          // this.visible = !this.visible;
+          // this.spinning = !this.spinning;
+          that.changePanelSelectOrderSetFormValue(item);
+
+          // this.$message.success(`${file.file.name} 上传成功.`);
+        })
+        .catch((err) => {
+          // this.$message.error(`${file.file.name} 上传失败.`);
+          newObject.status = "error";
+        });
     },
     /**
      * 文件状态改变
@@ -1801,9 +2241,9 @@ export default {
           const showFiledName = itemObject.useCtrlAttr.showFiledName;
           let optionList = [];
           try {
-            optionList = this.replaceExpData(showFiledName, "resultData", resultOptions);
+            optionList =showFiledName? this.replaceExpData(showFiledName, "resultData", resultOptions):resultOptions;
           } catch (error) {}
-          if (itemObject.useCtrlAttr.replaceFields) {
+          if (itemObject.useCtrlAttr.replaceFields&&IDM.type(optionList)=="array") {
             const replaceFields = itemObject.useCtrlAttr.replaceFields;
             const replaceArray = ["title", "key", "value", "disabled", "label"];
             optionList.forEach((item) => {
@@ -1828,6 +2268,83 @@ export default {
           this.findStr = ",";
           this.switchTreeDataToOptionList(itemObject.useCtrlAttr.options, itemObject);
           this.findStr = "";
+        }
+      }else if(itemObject.useCtrlId=="table"&&itemObject.useCtrlAttr?.tableFiledList?.length){
+        //循环查找表格字段里面控件的数据源。
+        for (let index = 0; index < itemObject.useCtrlAttr.tableFiledList.length; index++) {
+          const element = itemObject.useCtrlAttr.tableFiledList[index];
+          let resultOptions,
+            paramObject = { ...this.commonParam() };
+          switch (element.dataType) {
+            case "code":
+              await window.IDM.http
+                .get(this.propData.codeDataIntelface, {
+                  ...this.commonParam(),
+                  codeKeys: element.codeId,
+                })
+                .then((res) => {
+                  //显示字段能自定义
+                  resultOptions = res.data;
+                });
+              break;
+            case "url":
+              if (element.customParam) {
+                paramObject = {
+                  ...paramObject,
+                  ...element.customParam,
+                };
+              }
+              await window.IDM.http[element.interfaceType || "get"](
+                element.interfaceUrl,
+                paramObject,
+                element.interfaceOption
+              ).then((res) => {
+                //显示字段能自定义
+                resultOptions = res.data;
+              });
+              break;
+            case "sql":
+              if (element.customParam) {
+                paramObject = {
+                  ...paramObject,
+                  ...element.customParam,
+                };
+              }
+              if (element.metaKey) {
+                paramObject["metaKey"] = element.metaKey;
+              }
+              await window.IDM.http[element.interfaceType || "get"](
+                this.propData.sqlDataIntelface,
+                paramObject
+              ).then((res) => {
+                //显示字段能自定义
+                resultOptions = res.data;
+              });
+              break;
+          }
+          //选项格式化，自定义函数处理选项数据
+          if(element.optionFunction&&typeof window[element.optionFunction]==="function"){
+            resultOptions = window[element.optionFunction](resultOptions)
+          }
+          if (resultOptions) {
+            const showFiledName = element.showFiledName;
+            let optionList = [];
+            try {
+              optionList =showFiledName? this.replaceExpData(showFiledName, "resultData", resultOptions):resultOptions;
+            } catch (error) {}
+            if (element.replaceFields&&IDM.type(optionList)=="array") {
+              const replaceFields = element.replaceFields;
+              const replaceArray = ["title", "key", "value", "disabled", "label"];
+              optionList.forEach((item) => {
+                replaceArray.forEach((valItem) => {
+                  if (replaceFields[valItem]) {
+                    item[valItem] = item[replaceFields[valItem]];
+                  }
+                });
+              });
+            }
+            element.dictionary = optionList;
+          }
         }
       }
     },
@@ -2601,6 +3118,7 @@ export default {
                     case "select":
                     case "cascader":
                     case "checkbox":
+                    case "table":
                       try {
                         setParam[item.attrCode] = JSON.parse(item.attrData);
                         //进行过滤
@@ -2666,6 +3184,17 @@ export default {
             }
           } else if (item.useCtrlId == "colorPicker") {
             item.colors = this.form.getFieldValue(item.attrCode) || "";
+          }else if(item.useCtrlId == "table"){
+            const attrData = this.form.getFieldValue(item.attrCode);
+            if (typeof attrData === "string") {
+              try {
+                item.selectedList = JSON.parse(attrData);
+              } catch (error) {
+                
+              }
+            }else{
+              item.selectedList = attrData;
+            }
           }
         });
     },
@@ -2728,6 +3257,70 @@ export default {
 <style lang="scss" scoped>
 .idm_control_setting_panel {
   position: relative;
+  
+  .table-field-layout-table {
+    display: table;
+    margin-bottom: 16px;
+    // min-height: 84px;
+    position: relative;
+    table-layout: fixed;
+    width: 100%;
+    .table-field-table-head {
+      background-color: rgba(31, 56, 88, 0.06);
+      color: rgba(0, 0, 0, 0.6);
+      display: table-row;
+      font-size: 12px;
+      font-weight: 700;
+      height: 30px;
+      line-height: 30px;
+      overflow: hidden;
+      text-align: left;
+      .table-field-table-cell {
+        display: table-cell;
+        padding: 10px 8px;
+      }
+    }
+    .table-field-table-row {
+      display: table-row;
+      font-size: 12px;
+      overflow: hidden;
+      text-align: left;
+      .table-field-table-cell {
+        display: table-cell;
+        padding: 10px 8px;
+        vertical-align: middle;
+        &.item-idx {
+          text-align: center;
+        }
+      }
+    }
+    .table-field-table-empty {
+      color: #999;
+      font-size: 13px;
+      height: 50px;
+      line-height: 50px;
+      position: absolute;
+      text-align: center;
+      width: 100%;
+    }
+    &.table-field-theme-zebra .table-field-table-row:nth-child(odd) {
+      background-color: rgba(31, 56, 88, 0.04);
+    }
+    &.table-field-theme-split .table-field-table-cell {
+      border-bottom: 1px solid #e8e8e8;
+    }
+    &.table-field-theme-border {
+      border-collapse: collapse;
+      .table-field-table-cell {
+        border: 1px solid #e8e8e8;
+      }
+    }
+  }
+  .idm-control-setting-panel-upload-noadd{
+    >>>.ant-upload-select{
+      display: none;
+    }
+  }
 }
 .idm_control_center_popover {
   .vc-sketch {
