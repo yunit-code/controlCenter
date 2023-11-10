@@ -2204,10 +2204,9 @@ export default {
             break;
           case "url":
             if (itemObject.useCtrlAttr.customParam) {
-              paramObject = {
-                ...paramObject,
-                ...itemObject.useCtrlAttr.customParam,
-              };
+              Object.keys(itemObject.useCtrlAttr.customParam||{}).forEach(keyItem=>{
+                paramObject[keyItem] = IDM.express.replace(itemObject.useCtrlAttr.customParam[keyItem],{IDM:IDM});
+              })
             }
             await window.IDM.http[itemObject.useCtrlAttr.interfaceType || "get"](
               itemObject.useCtrlAttr.interfaceUrl,
