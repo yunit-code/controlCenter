@@ -43,9 +43,9 @@
       "no-unused-vars": 0,
       "no-empty": 0,
       "no-case-declarations": 0,
-      "no-useless-escape":0,
-      "no-self-assign":0,
-      "no-redeclare":0
+      "no-useless-escape": 0,
+      "no-self-assign": 0,
+      "no-redeclare": 0
     },
     "globals": {
       "IDM": true,
